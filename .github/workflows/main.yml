@@ -1,0 +1,22 @@
+name: CI SIM Website Master 
+on: push
+jobs:
+  build:
+    name: Build & Lighthouse - sim-website-us
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Runs Install
+        run: npm install
+        env:
+          CYPRESS_INSTALL_BINARY: 0
+      - name: Runs Build
+        run: npm run sim-us build
+        env:
+          SANITY_TOKEN: ${{ secrets.SANITY_TOKEN }}
+      - name: Run Lighthouse
+        uses: treosh/lighthouse-ci-action@v3
+        with:
+          configPath: './lighthouserc.json'
+          runs: 3
+          temporaryPublicStorage: true
